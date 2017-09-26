@@ -1,14 +1,19 @@
+import fs from 'fs';
+
 class Importer {
   constructor() {
-    console.log('importer');
   }
 
   import(path) {
-    console.log('import ' + path);
+    let rawData = fs.readFileSync(path, 'utf8');
+    let dataArray = rawData.split(/\r?\n/);
+    return Promise.resolve(dataArray);
   }
 
   importSync(path) {
-    console.log('import ' + path);
+    let rawData = fs.readFileSync(path, 'utf8');
+    let dataArray = rawData.split(/\r?\n/);
+    return JSON.stringify(dataArray);
   }
 }
 
