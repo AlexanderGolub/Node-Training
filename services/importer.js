@@ -7,7 +7,7 @@ class Importer {
   import(path) {
     let rawData = fs.readFileSync(path, 'utf8');
     let dataArray = rawData.split(/\r?\n/);
-    return Promise.resolve(dataArray);
+    return Promise.resolve(JSON.stringify(dataArray));
   }
 
   importSync(path) {
