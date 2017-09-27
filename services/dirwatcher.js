@@ -3,7 +3,6 @@ import fs from 'fs';
 
 class DirWatcher {
   constructor() {
-    console.log('dirWatcher');
   }
 
   watch(path, delay) {

@@ -5,9 +5,11 @@ class Importer {
   }
 
   import(path) {
-    let rawData = fs.readFileSync(path, 'utf8');
-    let dataArray = rawData.split(/\r?\n/);
-    return Promise.resolve(JSON.stringify(dataArray));
+    return new Promise((resolve, reject) => {
+      let rawData = fs.readFileSync(path, 'utf8');
+      let dataArray = rawData.split(/\r?\n/);
+      resolve(JSON.stringify(dataArray));
+    });
   }
 
   importSync(path) {
