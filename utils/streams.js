@@ -3,6 +3,7 @@
 const fs = require('fs');
 const through = require('through2');
 const split = require('split');
+const request = require('request');
 const argv = require('minimist')(process.argv.slice(2));
 
 function pipeToStdout(filePath) {
@@ -37,8 +38,9 @@ function csvToJsonFile(filename) {
 
   function write(buffer, encoding, next) {
     let chunkToWrite = JSON.stringify(buffer.toString());
-    chunkToWrite = writeIndex === 0 ? `[${chunkToWrite}` : `,${chunkToWrite}`;
+    chunkToWrite = writeIndex === 0 ? `[${chunkToWrite}` : `,${chunkToWrite}`; // to create valid JSON file
     this.push(chunkToWrite);
+
     writeIndex++;
     next();
   }
@@ -57,7 +59,22 @@ function csvToJsonFile(filename) {
 }
 
 function bundleCSS(path) {
-  
+  const fileNames = fs.readdirSync(path);
+  const bundlePath = `${path}/bundle.css`;
+  const EXTERNAL_SOURCE = `https://www.epam.com/etc/clientlibs/foundation/main.min.fc69c13add6eae57cd247a91c7e26a15.css`;
+
+  fs.closeSync(fs.openSync(bundlePath, 'w'));
+
+  fileNames.forEach((filename) => {
+    fs.createReadStream(`${path}/${filename}`)
+      .pipe(fs.createWriteStream(bundlePath, {flags: 'a'}));
+  });
+
+  request(EXTERNAL_SOURCE, function (err, response, body) {
+    if (!err) {
+      fs.appendFile(bundlePath, body);
+    }
+  });
 }
 
 function printHelpMessage() {
