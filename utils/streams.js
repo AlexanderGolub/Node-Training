@@ -3,6 +3,7 @@
 'use strict';
 
 const fs = require('fs');
+const minimist = require('minimist');
 const through = require('through2');
 const split = require('split');
 const request = require('request');
@@ -97,14 +98,23 @@ function printErrorMessage() {
 }
 
 function run() {
-  const argv = require('minimist')(process.argv.slice(2));
+  const ARG_PARSER_CONFIG = {
+    alias: {
+      'action': 'a',
+      'file': 'f',
+      'help': 'h',
+      'path': 'p'
+    }
+  };
 
-  if (argv.help || argv.h) {
+  const argv = minimist(process.argv.slice(2), ARG_PARSER_CONFIG);
+
+  if (argv.help) {
     printHelpMessage();
   } else {
-    const action = argv.action || argv.a;
-    const filename = argv.file || argv.f;
-    const path = argv.path || argv.p;
+    const action = argv.action;
+    const filename = argv.file;
+    const path = argv.path;
   
     switch (action) {
       case 'file-stdout':
