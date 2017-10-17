@@ -6,7 +6,6 @@ const fs = require('fs');
 const through = require('through2');
 const split = require('split');
 const request = require('request');
-const argv = require('minimist')(process.argv.slice(2));
 
 function pipeToStdout(filePath) {
   const reader = fs.createReadStream(filePath);
@@ -92,32 +91,46 @@ function printHelpMessage() {
   `);
 }
 
-if (argv.help || argv.h) {
+function printErrorMessage() {
+  console.log('Error. Input valid command');
   printHelpMessage();
-} else {
-  const action = argv.action || argv.a;
-  const filename = argv.file || argv.f;
-  const path = argv.path || argv.p;
+}
 
-  switch (action) {
-    case 'file-stdout':
-      pipeToStdout(filename);
-      break;
-    case 'capitalise':
-      convertToUpperCase();
-      break;
-    case 'print-file':
-      csvToJsonConsole(filename);
-      break;
-    case 'transform-file':
-      csvToJsonFile(filename);
-      break;
-    case 'bundle-css':
-      bundleCSS(path);
-      break;
-    default:
-      console.log('Error. Input valid command');
-      printHelpMessage();
-      break;
+function run() {
+  const argv = require('minimist')(process.argv.slice(2));
+
+  if (argv.help || argv.h) {
+    printHelpMessage();
+  } else {
+    const action = argv.action || argv.a;
+    const filename = argv.file || argv.f;
+    const path = argv.path || argv.p;
+  
+    switch (action) {
+      case 'file-stdout':
+        pipeToStdout(filename);
+        break;
+      case 'capitalise':
+        convertToUpperCase();
+        break;
+      case 'print-file':
+        csvToJsonConsole(filename);
+        break;
+      case 'transform-file':
+        csvToJsonFile(filename);
+        break;
+      case 'bundle-css':
+        bundleCSS(path);
+        break;
+      default:
+        printErrorMessage();
+        break;
+    }
   }
+}
+
+if (module.parent) {
+  exports.streamsUtility = {pipeToStdout, convertToUpperCase, csvToJsonConsole, csvToJsonFile, bundleCSS};
+} else {
+  run();
 }
