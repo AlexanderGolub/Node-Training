@@ -106,10 +106,10 @@ function run() {
       'path': 'p'
     }
   };
-
   const argv = minimist(process.argv.slice(2), ARG_PARSER_CONFIG);
+  const firstArgument = Object.keys(argv)[1];
 
-  if (argv.help) {
+  if (firstArgument === 'help' || firstArgument === 'h') {
     printHelpMessage();
   } else {
     const action = argv.action;
