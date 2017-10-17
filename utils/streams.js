@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 
 const fs = require('fs');
@@ -80,6 +82,7 @@ function bundleCSS(path) {
 function printHelpMessage() {
   console.log(`
     Usage: ./streams.js [options]
+           streams [options]
 
     Options:
       -a, --action      set action name to run

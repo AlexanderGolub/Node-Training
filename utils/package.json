@@ -2,9 +2,9 @@
   "name": "streams",
   "version": "1.0.0",
   "description": "",
-  "main": "streams.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "preferGlobal": "true",
+  "bin": {
+    "streams": "./streams.js"
   },
   "author": "",
   "license": "ISC"
