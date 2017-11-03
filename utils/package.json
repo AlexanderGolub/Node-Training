@@ -1,0 +1,11 @@
+{
+  "name": "streams",
+  "version": "1.0.0",
+  "description": "",
+  "preferGlobal": "true",
+  "bin": {
+    "streams": "./streams.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
