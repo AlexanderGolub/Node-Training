@@ -1,17 +1,8 @@
 import appConfig from './config/app.json';
-import {Product, User} from './models';
-import {Importer, DirWatcher} from './services';
+import express from 'express';
+import routes from './routes';
 
-console.log(appConfig.appName);
+const app = express();
+app.use('/', routes);
 
-const user = new User();
-const product = new Product();
-
-const importer = new Importer();
-const dirWatcher = new DirWatcher();
-
-const dataWatcher = dirWatcher.watch('./data', 3000);
-
-dataWatcher.on('dirwatcher:changed', (path) => {
-  importer.importSync(path);
-});
+export default app;
