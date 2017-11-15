@@ -1,4 +1,4 @@
-import User from './User';
-import Product from './Product';
+import UserModel from './User';
+import ProductModel from './Product';
 
-export {User, Product};
+export {UserModel, ProductModel};

@@ -1,6 +1,4 @@
-import {Product} from '../models';
-
-const ProductModel = new Product();
+import {ProductModel} from '../models';
 
 function getAllProducts() {
   return ProductModel.getProducts();
