@@ -1,6 +1,4 @@
-import {User} from '../models';
-
-const UserModel = new User();
+import {UserModel} from '../models';
 
 function getAllUsers() {
   return UserModel.getUsers();
