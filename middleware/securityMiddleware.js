@@ -1,35 +1,41 @@
 import jwt from 'jsonwebtoken';
 import {UserModel} from '../models';
 import {SECRET} from '../config/securityConfig';
+import models from '../models';
 
 function signIn(req, res) {
-  const usersList = UserModel.getUsers();
   const {login, password} = req.body;
 
-  const userInfo = usersList.find(user => login === user.login);
-
-  if (!userInfo || userInfo.password !== password) {
-    res.status(403).send({code: 404, message: 'User Not Found'});
-  } else {
-    const payload = { userId: userInfo.id };
-    const token = jwt.sign(payload, SECRET, {expiresIn: '1h'});
-
-    res.send({
-      code: 200,
-      message: 'OK',
-      data: {
-        user: {
-          email: userInfo.email,
-          name: userInfo.name
-        }
-      },
-      token: token
-    });
-  }
+  models.User.find({
+    where: {
+      login: login,
+      password: password
+    }
+  }).then(userInfo => {
+    if (!userInfo) {
+      res.status(403).send({code: 404, message: 'User Not Found'});
+    } else {
+      const payload = { userId: userInfo.id };
+      const token = jwt.sign(payload, SECRET, {expiresIn: '1h'});
+  
+      res.send({
+        code: 200,
+        message: 'OK',
+        data: {
+          user: {
+            email: userInfo.email,
+            name: userInfo.name
+          }
+        },
+        token: token
+      });
+    }
+  }).catch(err => {
+    res.status(500).send({code: 500, message: 'DB error'});
+  });
 }
 
 function checkToken(req, res, next) {
-  console.log(SECRET);
   const token = req.headers['x-access-token'];
 
   if (token) {
@@ -37,6 +43,7 @@ function checkToken(req, res, next) {
       if (err) {
         res.status(403).send({code: 403, message: 'Token Not Verified'});
       } else {
+        req.decodedToken = decoded;
         next();
       }
     });
