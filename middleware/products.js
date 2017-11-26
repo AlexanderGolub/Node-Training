@@ -1,27 +1,42 @@
-import models from '../models';
+import models from '../modelsMongo';
 
-function getAllProducts() {
-  return models.Product.findAll({});
-}
-
-function getProductById(productId) {
-  return models.Product.find({
-    where: {
-      id: productId
-    }
+function getAllProducts(req, res) {
+  models.Product.find((err, products) => {
+    res.json(products);
   });
 }
 
-function getReviewsById(reviewId) {
-  return Promise.resolve('Not implemented');
+function getProductById(req, res) {
+  const productId = Number(req.params.id);
+  models.Product.find({id: productId}, (err, products) => {
+    res.json(products);
+  });
 }
 
-function addProduct(product) {
-  return models.Product.create({
-    name: product.name,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  })
+function getReviewsById(req, res) {
+  const productId = Number(req.params.id);
+  models.Review.find({productId: productId}, (err, reviews) => {
+    res.json(reviews);
+  });
 }
 
-export default {getAllProducts, getProductById, getReviewsById, addProduct};
+function addProduct(req, res) {
+  const reqInfo = req.body;
+  const productInfo = new models.Product(reqInfo);
+
+  productInfo.lastModifiedDate = new Date();
+
+  productInfo.save(() => {
+    res.json(productInfo);
+  });
+}
+
+function deleteProduct(req, res) {
+  const productId = Number(req.params.id);
+  
+  models.Product.findOne({id: productId}).remove(() => {
+    res.send('Deleted');
+  });
+}
+
+export default {getAllProducts, getProductById, getReviewsById, addProduct, deleteProduct};

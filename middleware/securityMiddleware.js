@@ -1,17 +1,15 @@
 import jwt from 'jsonwebtoken';
 import {UserModel} from '../models';
 import {SECRET} from '../config/securityConfig';
-import models from '../models';
+import models from '../modelsMongo';
 
 function signIn(req, res) {
   const {login, password} = req.body;
 
-  models.User.find({
-    where: {
-      login: login,
-      password: password
-    }
-  }).then(userInfo => {
+  models.User.findOne({
+    login: login,
+    password: password
+  }, (err, userInfo) => {
     if (!userInfo) {
       res.status(403).send({code: 404, message: 'User Not Found'});
     } else {
@@ -30,8 +28,6 @@ function signIn(req, res) {
         token: token
       });
     }
-  }).catch(err => {
-    res.status(500).send({code: 500, message: 'DB error'});
   });
 }
 
