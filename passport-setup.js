@@ -3,7 +3,7 @@ import LocalStrategy from 'passport-local';
 import FacebookStrategy from 'passport-facebook';
 import TwitterStrategy from 'passport-twitter';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
-import models from './models';
+import models from '../modelsMongo';
 import {
   FACEBOOK_APP_ID,
   FACEBOOK_APP_SECRET,
@@ -22,19 +22,15 @@ const LocalStrategyConfig = {
 };
 
 const localStrategy = new LocalStrategy(LocalStrategyConfig, (username, password, done) => {
-  models.User.find({
-    where: {
-      login: username,
-      password: password
-    }
-  }).then(userInfo => {
+  models.User.findOne({
+    login: username,
+    password: password
+  }, (err, userInfo) => {
     if (!userInfo) {
       done(null, false, 'wrong login or password');
     } else {
       done(null, userInfo);
     }
-  }).catch(err => {
-    done(err, false, 'DB error');
   });
 });
 

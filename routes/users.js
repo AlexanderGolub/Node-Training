@@ -1,9 +1,11 @@
 import {userMiddleware} from '../middleware';
 
 function getAllUsers(req, res) {
-  userMiddleware.getAllUsers()
-                .then(data => res.json(data))
-                .catch(err => res.send(err));
+  userMiddleware.getAllUsers(req, res);
 }
 
-export default {getAllUsers};
+function deleteUser(req, res) {
+  userMiddleware.deleteUser(req, res);
+}
+
+export default {getAllUsers, deleteUser};

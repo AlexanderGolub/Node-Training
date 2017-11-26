@@ -1,7 +1,17 @@
-import models from '../models';
+import models from '../modelsMongo';
 
-function getAllUsers() {
-  return models.User.findAll({});
+function getAllUsers(req, res) {
+  models.User.find((err, users) => {
+    res.json(users);
+  });
 }
 
-export default {getAllUsers};
+function deleteUser(req, res) {
+  const userId = Number(req.params.id);
+  
+  models.User.findOne({id: userId}).remove(() => {
+    res.send('Deleted');
+  });
+}
+
+export default {getAllUsers, deleteUser};
