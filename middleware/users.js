@@ -1,7 +1,7 @@
-import {UserModel} from '../models';
+import models from '../models';
 
 function getAllUsers() {
-  return UserModel.getUsers();
+  return models.User.findAll({});
 }
 
 export default {getAllUsers};

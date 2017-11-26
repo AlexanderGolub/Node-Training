@@ -1,20 +1,27 @@
 import {productMiddleware} from '../middleware';
 
 function getAllProducts(req, res) {
-  res.json(productMiddleware.getAllProducts());
+  productMiddleware.getAllProducts()
+                  .then(data => res.json(data))
+                  .catch(err => res.send(err));
 }
 
 function getProductById(req, res) {
-  res.json(productMiddleware.getProductById(Number(req.params.id)));
+  productMiddleware.getProductById(Number(req.params.id))
+                  .then(data => res.json(data))
+                  .catch(err => res.send(err));
 }
 
 function getReviewsById(req, res) {
-  res.json(productMiddleware.getReviewsById(Number(req.params.id)));
+  productMiddleware.getReviewsById(Number(req.params.id))
+                  .then(data => res.json(data))
+                  .catch(err => res.send(err));
 }
 
 function addProduct(req, res) {
-  product.addProduct(req.body);
-  res.json(req.body);
+  productMiddleware.addProduct(req.body)
+                  .then(data => res.json(data))
+                  .catch(err => res.send(err));
 }
 
 export default {getAllProducts, getProductById, getReviewsById, addProduct};

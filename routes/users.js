@@ -1,7 +1,9 @@
 import {userMiddleware} from '../middleware';
 
 function getAllUsers(req, res) {
-  res.json(userMiddleware.getAllUsers());
+  userMiddleware.getAllUsers()
+                .then(data => res.json(data))
+                .catch(err => res.send(err));
 }
 
 export default {getAllUsers};

@@ -1,19 +1,27 @@
-import {ProductModel} from '../models';
+import models from '../models';
 
 function getAllProducts() {
-  return ProductModel.getProducts();
+  return models.Product.findAll({});
 }
 
 function getProductById(productId) {
-  return ProductModel.getProducts().find(product => product.id === productId);
+  return models.Product.find({
+    where: {
+      id: productId
+    }
+  });
 }
 
 function getReviewsById(reviewId) {
-  return ProductModel.getReviews().find(review => review.productId === reviewId);
+  return Promise.resolve('Not implemented');
 }
 
 function addProduct(product) {
-  return ProductModel.addProduct(product);
+  return models.Product.create({
+    name: product.name,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
 }
 
 export default {getAllProducts, getProductById, getReviewsById, addProduct};
