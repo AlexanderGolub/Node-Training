@@ -1,0 +1,354 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a simple API"
+  version: "1.0.0"
+  title: "Trash app API"
+  contact:
+    email: "hey@you.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/FalseCover/NodeMent/1.0.0"
+tags:
+- name: "users"
+  description: "User operations"
+- name: "products"
+  description: "Product operations"
+- name: "cities"
+  description: "Everithing about cities"
+schemes:
+- "https"
+paths:
+  /products:
+    get:
+      tags:
+      - "products"
+      summary: "Return all products"
+      operationId: "productsGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+      x-swagger-router-controller: "Products"
+    post:
+      tags:
+      - "products"
+      summary: "Save new product"
+      operationId: "productsPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "new product info"
+        required: true
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Product"
+      x-swagger-router-controller: "Products"
+  /products/{productId}:
+    get:
+      tags:
+      - "products"
+      summary: "Return product by id"
+      operationId: "productsProductIdGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "product id to return"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/Product"
+      x-swagger-router-controller: "Products"
+    delete:
+      tags:
+      - "products"
+      summary: "Delete product by id"
+      operationId: "productsProductIdDELETE"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "product id to delete"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Successful"
+      x-swagger-router-controller: "Products"
+  /products/{productId}/reviews:
+    get:
+      tags:
+      - "products"
+      summary: "Return product reviews by id"
+      operationId: "productsProductIdReviewsGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productId"
+        in: "path"
+        description: "product id to return reviews for"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/ProductReviews"
+      x-swagger-router-controller: "Products"
+  /users:
+    get:
+      tags:
+      - "users"
+      summary: "Return all users"
+      operationId: "usersGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+      x-swagger-router-controller: "Users"
+  /users/{userId}:
+    delete:
+      tags:
+      - "users"
+      operationId: "usersUserIdDELETE"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "user id to delete"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Successful"
+      x-swagger-router-controller: "Users"
+  /cities:
+    get:
+      tags:
+      - "cities"
+      summary: "Return all cities"
+      operationId: "citiesGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/City"
+      x-swagger-router-controller: "Cities"
+    post:
+      tags:
+      - "cities"
+      operationId: "citiesPOST"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "new city info"
+        required: true
+        schema:
+          $ref: "#/definitions/City"
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/City"
+      x-swagger-router-controller: "Cities"
+  /cities/{cityId}:
+    put:
+      tags:
+      - "cities"
+      operationId: "citiesCityIdPUT"
+      parameters:
+      - name: "cityId"
+        in: "path"
+        description: "id of city to update data"
+        required: true
+        type: "integer"
+        format: "int32"
+      - in: "body"
+        name: "body"
+        description: "updated city info"
+        required: false
+        schema:
+          $ref: "#/definitions/City"
+      responses:
+        200:
+          description: "Successful"
+          schema:
+            $ref: "#/definitions/City"
+      x-swagger-router-controller: "Cities"
+    delete:
+      tags:
+      - "cities"
+      operationId: "citiesCityIdDELETE"
+      parameters:
+      - name: "cityId"
+        in: "path"
+        description: "city id to delete"
+        required: true
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "Successful"
+      x-swagger-router-controller: "Cities"
+definitions:
+  Product:
+    type: "object"
+    required:
+    - "id"
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        example: 3452
+      name:
+        type: "string"
+        example: "Purple Shirt"
+    example:
+      name: "Purple Shirt"
+      id: 3452
+  ProductReviews:
+    type: "object"
+    required:
+    - "productId"
+    - "reviews"
+    properties:
+      productId:
+        type: "integer"
+        format: "int32"
+        example: 3452
+      reviews:
+        type: "array"
+        items:
+          $ref: "#/definitions/Review"
+    example:
+      productId: 3452
+      reviews:
+      - review: "Such a great product"
+        userId: 3535
+      - review: "Such a great product"
+        userId: 3535
+  Review:
+    type: "object"
+    required:
+    - "review"
+    - "userId"
+    properties:
+      userId:
+        type: "integer"
+        format: "int32"
+        example: 3535
+      review:
+        type: "string"
+        example: "Such a great product"
+    example:
+      review: "Such a great product"
+      userId: 3535
+  User:
+    type: "object"
+    required:
+    - "id"
+    - "login"
+    - "name"
+    - "password"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        example: 3535
+      name:
+        type: "string"
+        example: "The Bad"
+      login:
+        type: "string"
+        example: "DarkStalker666"
+      password:
+        type: "string"
+        example: "wizard777"
+      email:
+        type: "string"
+        example: "darkstalker@gmail.com"
+    example:
+      password: "wizard777"
+      name: "The Bad"
+      id: 3535
+      login: "DarkStalker666"
+      email: "darkstalker@gmail.com"
+  City:
+    type: "object"
+    required:
+    - "capital"
+    - "id"
+    - "name"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        example: 3535
+      name:
+        type: "string"
+        example: "Minsk"
+      country:
+        type: "string"
+        example: "Belarus"
+      capital:
+        type: "boolean"
+        example: true
+      location:
+        $ref: "#/definitions/Location"
+    example:
+      country: "Belarus"
+      capital: true
+      name: "Minsk"
+      location:
+        lat: "-40.88"
+        long: "120.17"
+      id: 3535
+  Location:
+    type: "object"
+    properties:
+      lat:
+        type: "integer"
+        example: "-40.88"
+      long:
+        type: "integer"
+        example: "120.17"
+    example:
+      lat: "-40.88"
+      long: "120.17"
