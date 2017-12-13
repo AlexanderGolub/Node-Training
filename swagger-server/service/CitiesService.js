@@ -1,6 +1,6 @@
 'use strict';
 
-
+import models from '../../modelsMongo';
 /**
  *
  * cityId Integer city id to delete
@@ -8,7 +8,9 @@
  **/
 exports.citiesCityIdDELETE = function(cityId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    models.City.findOne({id: cityId}).remove(() => {
+      resolve('Deleted');
+    });
   });
 }
 
@@ -21,22 +23,26 @@ exports.citiesCityIdDELETE = function(cityId) {
  **/
 exports.citiesCityIdPUT = function(cityId,body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "country" : "Belarus",
-  "capital" : true,
-  "name" : "Minsk",
-  "location" : {
-    "lat" : "-40.88",
-    "long" : "120.17"
-  },
-  "id" : 3535
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    models.City.findOne({id: cityId}, (err, city) => {
+      if (!city) {
+        let newBody = body;
+        newBody.id = cityId;
+        citiesPOST(newBody)
+          .then(function (city) {
+            resolve(city);
+          });
+      } else {
+        for (let field in reqInfo) {
+          city[field] = reqInfo[field];
+        }
+    
+        city.lastModifiedDate = new Date();
+    
+        city.save(() => {
+          resolve(city);
+        });
+      }
+    });
   });
 }
 
@@ -48,31 +54,9 @@ exports.citiesCityIdPUT = function(cityId,body) {
  **/
 exports.citiesGET = function() {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "country" : "Belarus",
-  "capital" : true,
-  "name" : "Minsk",
-  "location" : {
-    "lat" : "-40.88",
-    "long" : "120.17"
-  },
-  "id" : 3535
-}, {
-  "country" : "Belarus",
-  "capital" : true,
-  "name" : "Minsk",
-  "location" : {
-    "lat" : "-40.88",
-    "long" : "120.17"
-  },
-  "id" : 3535
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    models.City.find((err, cities) => {
+      resolve(cities);
+    });
   });
 }
 
@@ -84,22 +68,13 @@ exports.citiesGET = function() {
  **/
 exports.citiesPOST = function(body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "country" : "Belarus",
-  "capital" : true,
-  "name" : "Minsk",
-  "location" : {
-    "lat" : "-40.88",
-    "long" : "120.17"
-  },
-  "id" : 3535
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    const cityInfo = new models.City(body);
+  
+    cityInfo.lastModifiedDate = new Date();
+  
+    cityInfo.save(() => {
+      resolve(cityInfo);
+    });
   });
 }
 

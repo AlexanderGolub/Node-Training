@@ -1,6 +1,6 @@
 'use strict';
 
-
+import models from '../../modelsMongo';
 /**
  * Return all products
  *
@@ -8,19 +8,9 @@
  **/
 exports.productsGET = function() {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "name" : "Purple Shirt",
-  "id" : 3452
-}, {
-  "name" : "Purple Shirt",
-  "id" : 3452
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    models.Product.find((err, products) => {
+      resolve(products);
+    });
   });
 }
 
@@ -33,16 +23,13 @@ exports.productsGET = function() {
  **/
 exports.productsPOST = function(body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "name" : "Purple Shirt",
-  "id" : 3452
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    const productInfo = new models.Product(body);
+    
+    productInfo.lastModifiedDate = new Date();
+  
+    productInfo.save(() => {
+      resolve(productInfo);
+    });
   });
 }
 
@@ -55,7 +42,9 @@ exports.productsPOST = function(body) {
  **/
 exports.productsProductIdDELETE = function(productId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    models.Product.findOne({id: productId}).remove(() => {
+      resolve('Deleted');
+    });
   });
 }
 
@@ -68,16 +57,9 @@ exports.productsProductIdDELETE = function(productId) {
  **/
 exports.productsProductIdGET = function(productId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "name" : "Purple Shirt",
-  "id" : 3452
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    models.Product.findOne({id: productId}, (err, product) => {
+      resolve(product);
+    });
   });
 }
 
@@ -90,22 +72,9 @@ exports.productsProductIdGET = function(productId) {
  **/
 exports.productsProductIdReviewsGET = function(productId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "productId" : 3452,
-  "reviews" : [ {
-    "review" : "Such a great product",
-    "userId" : 3535
-  }, {
-    "review" : "Such a great product",
-    "userId" : 3535
-  } ]
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    models.Review.find({productId: productId}, (err, reviews) => {
+      resolve(reviews);
+    });
   });
 }
 
